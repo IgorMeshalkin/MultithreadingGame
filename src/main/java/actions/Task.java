@@ -35,6 +35,10 @@ public class Task implements Runnable {
         event.setSuccess(result);
 
         actionRepository.singleAction(result ? bet : -bet, event);
+
+        if (result) {
+            CurrentUser.setCurrentClanGold(bet * 2);
+        }
     }
 }
 

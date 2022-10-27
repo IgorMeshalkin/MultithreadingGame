@@ -40,6 +40,10 @@ public class Battle implements Runnable {
         event.setSuccess(result);
 
         actionRepository.actionWithEnemy(result ? bet : -bet, enemyUser.getClan().getId(), event);
+
+        if (result) {
+            CurrentUser.setCurrentClanGold(bet * 2);
+        }
     }
 
     private User choiceOfEnemy() {
