@@ -4,6 +4,7 @@ import actions.Battle;
 import actions.Replenishment;
 import actions.Task;
 import model.Clan;
+import model.EventType;
 import model.User;
 import repository.ClanRepository;
 import repository.EventRepository;
@@ -77,13 +78,13 @@ public class ConsoleGameController {
         int answer = chooseAction(reader);
         switch (answer) {
             case (1):
-                newBattle(reader);
+                newAction(reader, EventType.BATTLE);
                 break;
             case (2):
-                newTask(reader);
+                newAction(reader, EventType.TASK);
                 break;
             case (3):
-                newReplenishment(reader);
+                newAction(reader, EventType.REPLENISHMENT);
                 break;
             case (4):
                 finishGame();
@@ -94,41 +95,41 @@ public class ConsoleGameController {
         }
     }
 
-    private void newBattle(BufferedReader reader) {
+    private void newAction(BufferedReader reader, EventType type) {
         int currentClanGold = CurrentUser.getCurrentClanGold();
-        System.out.println("Казна твоего клана составляет: " + currentClanGold + " золотых" + "\n"
-                + "Сколько ты хочешь поставить на бой?");
 
-        int bet = chooseBet(reader, currentClanGold);
-        CurrentUser.setCurrentClanGold(-bet);
+        if (currentClanGold == 0 && !type.equals(EventType.REPLENISHMENT)) {
+            System.out.println("\n" + "Казна твоего клана равна \"0\"" + "\n"
+                    + "дождись окончания текущих действий или пополни её за свой счёт" + "\n");
+            action(reader);
+        }
 
-        executorService.submit(new Battle(bet));
-        System.out.println("Битва началась, ты можешь не ждать окончания, а выбрать следующее действие" + "\n");
-        action(reader);
-    }
+        System.out.println("Казна твоего клана составляет: " + currentClanGold + " золотых");
+        if (type.equals(EventType.BATTLE)) {
+            System.out.println("Сколько ты хочешь поставить на бой?");
+        } else if (type.equals(EventType.TASK)) {
+            System.out.println("Сколько ты хочешь поставить на выполнение задания?");
+        } else {
+            System.out.println("Сколько ты хочешь внести в казну своего клана?");
+        }
 
-    private void newTask(BufferedReader reader) {
-        int currentClanGold = CurrentUser.getCurrentClanGold();
-        System.out.println("Казна твоего клана составляет: " + currentClanGold + " золотых" + "\n"
-                + "Сколько ты хочешь поставить на выполнение задания?");
+        int bet = chooseBet(reader, currentClanGold, type);
+        if (!type.equals(EventType.REPLENISHMENT)) {
+            CurrentUser.setCurrentClanGold(-bet);
+        }
 
-        int bet = chooseBet(reader, currentClanGold);
-        CurrentUser.setCurrentClanGold(-bet);
+        if (type.equals(EventType.BATTLE)) {
+            executorService.submit(new Battle(bet));
+            System.out.println("Битва началась, ты можешь не ждать окончания, а выбрать следующее действие" + "\n");
+        } else if (type.equals(EventType.TASK)) {
+            executorService.submit(new Task(bet));
+            System.out.println("Задание началось, ты можешь не ждать окончания, а выбрать следующее действие" + "\n");
+        } else {
+            executorService.submit(new Replenishment(bet));
+            System.out.println("Деньги будут зачислены в ближайшее время," + "\n"
+                    + "ты можешь не ждать зачисления, а выбрать следующее действие" + "\n");
+        }
 
-        executorService.submit(new Task(bet));
-        System.out.println("Задание началось, ты можешь не ждать окончания, а выбрать следующее действие" + "\n");
-        action(reader);
-    }
-
-    private void newReplenishment(BufferedReader reader) {
-        int currentClanGold = CurrentUser.getCurrentClanGold();
-        System.out.println("Сколько ты хочешь внести в казну своего клана?");
-
-        int amount = chooseBet(reader, currentClanGold);
-
-        executorService.submit(new Replenishment(amount));
-        System.out.println("Деньги будут зачислены в ближайшее время," + "\n"
-                + " ты можешь не ждать зачисления, а выбрать следующее действие" + "\n");
         action(reader);
     }
 
@@ -163,21 +164,21 @@ public class ConsoleGameController {
         return answer;
     }
 
-    private int chooseBet(BufferedReader reader, int currentClanGold) {
+    private int chooseBet(BufferedReader reader, int currentClanGold, EventType type) {
         int bet = 0;
         try {
             bet = Integer.parseInt(reader.readLine());
-            if (bet > currentClanGold) {
+            if (bet > currentClanGold && !type.equals(EventType.REPLENISHMENT)) {
                 System.out.println("Остаток казны: " + currentClanGold + ". Ставка не может быть больше" + "\n"
                         + "Сколько ты хочешь поставить?");
-                return chooseBet(reader, currentClanGold);
+                return chooseBet(reader, currentClanGold, type);
             } else if (bet <= 0) {
                 System.out.println("Ставка не может быть " + (bet == 0 ? "равна \"0\"" : "отрицательным числом"));
-                return chooseBet(reader, currentClanGold);
+                return chooseBet(reader, currentClanGold, type);
             }
         } catch (Exception e) {
             System.out.println("Надо ввести корректное число");
-            return chooseBet(reader, currentClanGold);
+            return chooseBet(reader, currentClanGold, type);
         }
         return bet;
     }
