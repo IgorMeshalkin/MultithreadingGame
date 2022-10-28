@@ -1,7 +1,47 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
 
-<web-app>
-  <display-name>Archetype Created Web Application</display-name>
+  <!--Json handler-->
+  <servlet>
+    <servlet-name>ClanRestController</servlet-name>
+    <servlet-class>controller.rest.ClanRestController</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ClanRestController</servlet-name>
+    <url-pattern>/clans/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UserRestController</servlet-name>
+    <servlet-class>controller.rest.UserRestController</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>UserRestController</servlet-name>
+    <url-pattern>/users/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>EventRestController</servlet-name>
+    <servlet-class>controller.rest.EventRestController</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>EventRestController</servlet-name>
+    <url-pattern>/events</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>GameRestController</servlet-name>
+    <servlet-class>controller.rest.GameRestController</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>GameRestController</servlet-name>
+    <url-pattern>/game/*</url-pattern>
+  </servlet-mapping>
 </web-app>

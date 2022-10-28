@@ -12,14 +12,6 @@ public class ClanRepository implements TestTaskRepository<Clan> {
     private final Connection connection = ConnectionManager.open();
     private final ResultSetConverter resultSetConverter = new ResultSetConverter();
 
-    {
-        try {
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public List<Clan> findAll() {
         List<Clan> result = new ArrayList<>();
@@ -59,7 +51,7 @@ public class ClanRepository implements TestTaskRepository<Clan> {
     @Override
     public void save(Clan clan) {
         try (PreparedStatement preparedStatement =
-                     connection.prepareStatement("INSERT INTO clans (clan_name, clan_gold) VALUES(?, ?)")) {
+                     connection.prepareStatement("INSERT INTO clans (clan_name, clan_gold) VALUES (?, ?)")) {
 
             preparedStatement.setString(1, clan.getName());
             preparedStatement.setInt(2, clan.getGold());

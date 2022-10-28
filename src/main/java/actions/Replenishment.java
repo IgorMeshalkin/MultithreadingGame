@@ -32,6 +32,6 @@ public class Replenishment implements Runnable {
 
         actionRepository.singleAction(amount, event);
 
-        CurrentUser.setCurrentClanGold(amount);
+        CurrentUser.addCurrentClanGold(amount);
     }
 }

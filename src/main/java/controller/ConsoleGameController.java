@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConsoleGameController {
-    private static ExecutorService executorService = Executors.newFixedThreadPool(3);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(3);
     public final ClanRepository clanRepository = new ClanRepository();
     public final UserRepository userRepository = new UserRepository();
     public final EventRepository eventRepository = new EventRepository();
@@ -46,7 +46,7 @@ public class ConsoleGameController {
             System.out.println(counter.getAndIncrement() + " - " + cl.getName());
         });
         Clan clan = chooseClan(clans, reader);
-        CurrentUser.setCurrentClanGold(clan.getGold());
+//        CurrentUser.addCurrentClanGold(clan.getGold());
 
         User user = new User();
         user.setName(name);
@@ -115,7 +115,7 @@ public class ConsoleGameController {
 
         int bet = chooseBet(reader, currentClanGold, type);
         if (!type.equals(EventType.REPLENISHMENT)) {
-            CurrentUser.setCurrentClanGold(-bet);
+            CurrentUser.addCurrentClanGold(-bet);
         }
 
         if (type.equals(EventType.BATTLE)) {

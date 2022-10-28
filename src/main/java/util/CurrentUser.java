@@ -1,7 +1,6 @@
 package util;
 
 import model.User;
-import repository.UserRepository;
 
 public class CurrentUser {
     private static User currentUser;
@@ -13,13 +12,14 @@ public class CurrentUser {
 
     public static void setCurrentUser(User user) {
         currentUser = user;
+        currentClanGold = user.getClan().getGold();
     }
 
     public static int getCurrentClanGold() {
         return currentClanGold;
     }
 
-    public static void setCurrentClanGold(int gold) {
+    public static void addCurrentClanGold(int gold) {
         currentClanGold += gold;
     }
 }

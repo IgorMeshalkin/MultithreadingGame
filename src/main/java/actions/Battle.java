@@ -42,7 +42,7 @@ public class Battle implements Runnable {
         actionRepository.actionWithEnemy(result ? bet : -bet, enemyUser.getClan().getId(), event);
 
         if (result) {
-            CurrentUser.setCurrentClanGold(bet * 2);
+            CurrentUser.addCurrentClanGold(bet * 2);
         }
     }
 
