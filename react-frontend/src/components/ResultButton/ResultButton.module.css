@@ -1,0 +1,20 @@
+.actionsCounter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 180px;
+}
+
+.resultButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #A6A6C9;
+    width: 300px;
+    height: 50px;
+    border-radius: 15px;
+    margin: 10px auto 0;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}

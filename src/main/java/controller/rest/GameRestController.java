@@ -5,7 +5,6 @@ import actions.Replenishment;
 import actions.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.EventType;
-import model.User;
 import repository.UserRepository;
 import util.CurrentUser;
 import util.RestUtil;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -27,8 +25,6 @@ public class GameRestController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        List<User> allUsers = userRepository.findAll();
-        CurrentUser.setCurrentUser(allUsers.get(allUsers.size() - 1));
         executorService = Executors.newFixedThreadPool(3);
     }
 
@@ -63,8 +59,10 @@ public class GameRestController extends HttpServlet {
 
         if (newAction.getType().equals(EventType.BATTLE)) {
             executorService.submit(new Battle(newAction.getBet()));
+            CurrentUser.addCurrentClanGold(-newAction.getBet());
         } else if (newAction.getType().equals(EventType.TASK)) {
             executorService.submit(new Task(newAction.getBet()));
+            CurrentUser.addCurrentClanGold(-newAction.getBet());
         } else {
             executorService.submit(new Replenishment(newAction.getBet()));
         }

@@ -1,0 +1,28 @@
+table {
+    border-collapse: collapse;
+}
+
+.left {
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    width: 40px;
+}
+
+td {
+    text-align: center;
+}
+
+
+th {
+    height: 30px;
+    width: 150px;
+    background-color: #A6A6C9;
+}
+
+.firstColumn {
+    width: 40px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #dddddd;
+}

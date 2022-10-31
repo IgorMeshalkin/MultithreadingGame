@@ -5,8 +5,10 @@ import model.Clan;
 import model.User;
 import repository.ClanRepository;
 import repository.UserRepository;
+import util.CurrentUser;
 import util.RestUtil;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,19 +21,33 @@ public class UserRestController extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
+    public void init() throws ServletException {
+        initializingCurrentUser();
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long userId = RestUtil.getLongPathVariable(req);
+        String current = RestUtil.getStringPathVariable(req);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        if (userId == null) {
+
+        if (userId == null && current == null) {
             List<User> users = userRepository.findAll();
             String json = objectMapper.writeValueAsString(users);
             resp.getWriter().write(json);
-        } else {
+        }
+
+        if (userId != null) {
             User user = userRepository.findById(userId);
             String json = objectMapper.writeValueAsString(user);
+            resp.getWriter().write(json);
+        }
+
+        if (current != null && current.equals("current")) {
+            String json = objectMapper.writeValueAsString(CurrentUser.getCurrentUser());
             resp.getWriter().write(json);
         }
     }
@@ -46,6 +62,8 @@ public class UserRestController extends HttpServlet {
         User user = objectMapper.readValue(RestUtil.readJsonFromRequestBody(req), User.class);
         user.setClan(clan);
         userRepository.save(user);
+
+        initializingCurrentUser();
     }
 
     @Override
@@ -66,6 +84,11 @@ public class UserRestController extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long userId = RestUtil.getLongPathVariable(req);
         userRepository.delete(userId);
+    }
+
+    private void initializingCurrentUser() {
+        List<User> allUsers = userRepository.findAll();
+        CurrentUser.setCurrentUser(allUsers.get(allUsers.size() - 1));
     }
 }
 

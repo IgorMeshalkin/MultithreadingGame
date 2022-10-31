@@ -29,7 +29,7 @@ public class RestUtil {
     public static String readJsonFromRequestBody(HttpServletRequest req) throws IOException {
         StringBuilder builder = new StringBuilder();
 
-        try(BufferedReader reader = req.getReader()) {
+        try (BufferedReader reader = req.getReader()) {
             int intValueOfChar;
             while ((intValueOfChar = reader.read()) != -1) {
                 builder.append((char) intValueOfChar);
@@ -38,4 +38,4 @@ public class RestUtil {
 
         return builder.toString();
     }
- }
+}

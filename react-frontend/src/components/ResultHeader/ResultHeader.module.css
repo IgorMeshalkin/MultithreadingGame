@@ -1,0 +1,39 @@
+.main {
+    display: flex;
+    margin-bottom: 40px;
+    margin-top: 30px;
+}
+
+.button {
+    height: 50px;
+    width: 200px;
+    background-color: #dddddd;
+    border-radius: 16px;
+    margin: auto 100px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.button:hover {
+    border: #A6A6C9 1px solid;
+}
+
+.button:active {
+    background-color: #A6A6C9;
+}
+
+.center {
+    display: block;
+    max-width: 400px;
+}
+
+.text {
+    margin: auto;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
